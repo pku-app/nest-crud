@@ -10,4 +10,4 @@ Run instructions:
 
 ```$ docker-compose up```
 
-Then, access http://127.0.0.1:/3000. Node Debugger is running on port 9229.
+Then, access http://127.0.0.1:3000. Node Debugger is running on port 9229.
