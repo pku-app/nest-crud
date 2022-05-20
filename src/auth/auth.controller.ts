@@ -17,8 +17,12 @@ export class AuthController {
   @Post('/signup')
   async signUp(
     @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto
-  ): Promise<void> {
-    return await this.authService.signUp(authCredentialsDto);
+  ): Promise<any> {
+    const user = await this.authService.signUp(authCredentialsDto);
+    const token = await this.authService.signIn(user);
+    const sanitizedUser = this.authService.sanitizeUser(user);
+
+    return { sanitizedUser, token };
   }
 
   @Post('/signin')
