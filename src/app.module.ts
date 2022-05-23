@@ -1,17 +1,20 @@
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ConfigModule } from '@nestjs/config';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { MongooseModule } from '@nestjs/mongoose';
-
-const url = process.env.MONGO_URL || 'localhost';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   controllers: [AppController],
   providers: [AppService],
   imports: [
+    ConfigModule.forRoot(),
     MongooseModule.forRoot(
-      `mongodb://${url}:27017?serverSelectionTimeoutMS=2000&authSource=admin`,
+      process.env.MONGO_URI,
     ),
+    AuthModule,
   ],
 })
 export class AppModule {}
