@@ -4,8 +4,8 @@ import * as bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 
-import { AuthCredentialsDto } from './dto/auth-credentials.dto';
-import { User } from './interfaces/user.interface';
+import { AuthCredentialsDto } from '../user/dtos/auth-credentials.dto';
+import { User } from '../user/interfaces/user.interface';
 
 @Injectable()
 export class AuthService {
@@ -16,11 +16,11 @@ export class AuthService {
 
   // Generate new user, hash their password and save object to database
   async signUp(authCredentialsDto: AuthCredentialsDto): Promise<User> {
-    const { email, password } = authCredentialsDto;
+    const { email, password, name } = authCredentialsDto;
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = new this.userModel({ email, password: hashedPassword });
+    const user = new this.userModel({ email, password: hashedPassword, name });
 
     try {
       await user.save();
