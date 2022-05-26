@@ -4,7 +4,7 @@ import * as bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 
-import { AuthCredentialsDto } from '../user/dtos/auth-credentials.dto';
+import { AuthCredentialsDto } from '../user/dto/auth-credentials.dto';
 import { User } from '../user/interfaces/user.interface';
 
 @Injectable()
@@ -36,12 +36,12 @@ export class AuthService {
 
   // Return user object without password field
   sanitizeUser(user: User) {
-    return { 'id': user['_id'], 'email': user['email'] };
+    return { 'id': user['_id'], 'email': user['email'], name: user['name'] };
   }
 
   // Generate JWT token for user
   async signIn(user: User) {
-    const payload = { email: user.email, sub: user._id };
+    const payload = { email: user.email, sub: user._id, name: user.name };
     return {
       accessToken: this.jwtService.sign(payload),
     };

@@ -8,13 +8,14 @@ import {
 } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
-import { AuthCredentialsDto } from '../user/dtos/auth-credentials.dto';
+import { AuthCredentialsDto } from '../user/dto/auth-credentials.dto';
+import { LocalAuthGuard } from './guards/local-auth.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Post('/signup')
+  @Post('signup')
   async signUp(
     @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto
   ): Promise<any> {
@@ -25,8 +26,9 @@ export class AuthController {
     return { user, token };
   }
 
-  @Post('/signin')
+  @UseGuards(LocalAuthGuard)
+  @Post('signin')
   async signIn(@Request() req) {
-    return this.authService.signIn(req.body);
+    return this.authService.signIn(req.user);
   }
 }
