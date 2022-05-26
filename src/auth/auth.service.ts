@@ -4,8 +4,8 @@ import * as bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 
-import { AuthCredentialsDto } from './dto/auth-credentials.dto';
-import { User } from './interfaces/user.interface';
+import { AuthCredentialsDto } from '../user/dto/auth-credentials.dto';
+import { User } from '../user/interfaces/user.interface';
 
 @Injectable()
 export class AuthService {
@@ -16,11 +16,11 @@ export class AuthService {
 
   // Generate new user, hash their password and save object to database
   async signUp(authCredentialsDto: AuthCredentialsDto): Promise<User> {
-    const { email, password } = authCredentialsDto;
+    const { email, password, name } = authCredentialsDto;
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = new this.userModel({ email, password: hashedPassword });
+    const user = new this.userModel({ email, password: hashedPassword, name });
 
     try {
       await user.save();
@@ -36,12 +36,12 @@ export class AuthService {
 
   // Return user object without password field
   sanitizeUser(user: User) {
-    return { 'id': user['_id'], 'email': user['email'] };
+    return { 'id': user['_id'], 'email': user['email'], name: user['name'] };
   }
 
   // Generate JWT token for user
   async signIn(user: User) {
-    const payload = { email: user.email, sub: user._id };
+    const payload = { email: user.email, sub: user._id, name: user.name };
     return {
       accessToken: this.jwtService.sign(payload),
     };
