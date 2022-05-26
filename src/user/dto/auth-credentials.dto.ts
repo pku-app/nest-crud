@@ -1,6 +1,12 @@
-import { IsString, MaxLength, MinLength, IsEmail } from 'class-validator';
+import { 
+  IsString, 
+  MaxLength, 
+  MinLength, 
+  IsEmail, 
+  IsNotEmpty } from 'class-validator';
 
 export class AuthCredentialsDto {
+  @IsNotEmpty()
   @IsString()
   @IsEmail()
   email: string;
@@ -10,5 +16,7 @@ export class AuthCredentialsDto {
   @MaxLength(128, { message: 'Password is too long (128 characters max)' })
   password: string;
 
+  @IsString()
+  @IsNotEmpty()
   name: string;
 }
